@@ -14,6 +14,12 @@
 namespace MvcCore\Ext\Models\Db\Models\MySqls;
 
 trait ProviderResource {
+	
+	/**
+	 * Connection class full name, specific for each extension.
+	 * @var string
+	 */
+	protected static $providerConnectionClass = '\\MvcCore\\Ext\\Models\\Db\\Providers\\Connections\\MySql';
 
 	/**
 	 * Database provider specific resource class instance with universal SQL statements.
