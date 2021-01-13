@@ -72,6 +72,8 @@ implements	\MvcCore\Ext\Models\Db\Model\IConstants,
 	 * @return bool
 	 */
 	public function BeginTransaction ($flags = 0, $name = NULL) {
+		if ($flags === 0) $flags = self::TRANS_READ_WRITE;
+
 		$transRepeatableRead = ($flags & self::TRANS_ISOLATION_REPEATABLE_READ) > 0;
 		$consistentSnapshot = (
 			$transRepeatableRead &&
