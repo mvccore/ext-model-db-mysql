@@ -11,20 +11,22 @@
  * @license  https://mvccore.github.io/docs/mvccore/5.0.0/LICENCE.md
  */
 
-namespace MvcCore\Ext\Models\Db\Models;
+namespace MvcCore\Ext\Models\Db\Providers\Resources;
 
 class		MySql
 implements	\MvcCore\Model\IConstants,
-			\MvcCore\Ext\Models\Db\IModel,
-			\MvcCore\Ext\Models\Db\Model\IConstants,
-			\MvcCore\Ext\Models\Db\Models\MySqls\IConstants {
+			\MvcCore\Ext\Models\Db\Model\IConstants {
 	
 	use \MvcCore\Model\Props;
 	use \MvcCore\Model\Config;
-	use \MvcCore\Model\Resource;
-	use \MvcCore\Model\MagicMethods;
-	use \MvcCore\Model\Converters;
-	use \MvcCore\Model\Comparers;
 
-	use \MvcCore\Ext\Models\Db\Models\MySqls\Features;
+	use \MvcCore\Model\Connection, 
+		\MvcCore\Ext\Models\Db\Model\Connection {
+			\MvcCore\Ext\Models\Db\Model\Connection::GetConnection insteadof \MvcCore\Model\Connection;
+			\MvcCore\Model\Connection::GetConnection as GetProviderConnection;
+		}
+	
+	use \MvcCore\Ext\Models\Db\Models\MySqls\ProviderResource;
+	
+	use \MvcCore\Ext\Models\Db\Providers\Resources\Manipulation;
 }
