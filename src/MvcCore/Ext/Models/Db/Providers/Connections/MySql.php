@@ -29,12 +29,6 @@ implements	\MvcCore\Ext\Models\Db\Model\IConstants,
 	 * @var bool|NULL
 	 */
 	protected $mariadb = NULL;
-	
-	/**
-	 * MySQL/MariaDB/Percona Server version in "PHP-standardized" version number string.
-	 * @var string|NULL
-	 */
-	protected $version = NULL;
 
 	/**
 	 * `TRUE` for SQL `READ WRITE` or `READ ONLY` start transaction property support.
@@ -42,21 +36,6 @@ implements	\MvcCore\Ext\Models\Db\Model\IConstants,
 	 */
 	protected $transReadWriteSupport = NULL;
 
-	/**
-	 * `TRUE` for multi statements connection type.
-	 * @var bool|NULL
-	 */
-	protected $multiStatements = NULL;
-
-
-
-	/**
-	 * Return server version in "PHP-standardized" version number string.
-	 * @return null|string
-	 */
-	public function GetVersion () {
-		return $this->version;
-	}
 
 	/**
 	 * Return `TRUE` if server is MariaDB.
@@ -74,14 +53,15 @@ implements	\MvcCore\Ext\Models\Db\Model\IConstants,
 		return !$this->mariadb;
 	}
 
+	
 	/**
-	 * Return `TRUE` for multi statements connection type.
-	 * @return bool|null
+	 * @inheritDocs
+	 * @param string $identifierName
+	 * @return string
 	 */
-	public function IsMutliStatements () {
-		return $this->mutliStatements;
+	public function QuoteName ($identifierName) {
+		return "`{$identifierName}`";
 	}
-
 
 	
 	/**
