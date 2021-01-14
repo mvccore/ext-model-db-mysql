@@ -253,18 +253,6 @@ implements	\MvcCore\Ext\Models\Db\Model\IConstants,
 
 	/**
 	 * @inheritDocs
-	 * @return \PDO
-	 */
-	protected function connect () {
-		$this->provider = new \PDO(
-			$this->dsn, $this->username, $this->password, $this->options
-		);
-		$this->setUpConnectionSpecifics();
-		return $this->provider;
-	}
-
-	/**
-	 * @inheritDocs
 	 * @see https://stackoverflow.com/questions/7942154/mysql-error-2006-mysql-server-has-gone-away
 	 * @param \Throwable $e 
 	 * @return bool
@@ -285,35 +273,32 @@ implements	\MvcCore\Ext\Models\Db\Model\IConstants,
 	 * @return void
 	 */
 	protected function setUpConnectionSpecifics () {
-		$multiStatementsConst = '\PDO::MYSQL_ATTR_MULTI_STATEMENTS';
-		$multiStatementsConstVal = defined($multiStatementsConst) ? constant($multiStatementsConst) : 0;
-		$this->multiStatements = isset($this->options[$multiStatementsConstVal]);
-		
-		$serverVersionConst = '\PDO::ATTR_SERVER_VERSION';
-		$serverVersionConstVal = defined($serverVersionConst) ? constant($serverVersionConst) : 0;
-		
-		$rawServerVersion = mb_strtolower($this->provider->getAttribute($serverVersionConstVal));
-		$mariaDbPos = mb_strpos($rawServerVersion, 'mariadb');
+		parent::setUpConnectionSpecifics();
+		$mariaDbPos = mb_strpos($this->version, 'mariadb');
 		if ($mariaDbPos !== FALSE) {
 			$this->mariadb = TRUE;
-			$rawServerVersion = trim(mb_substr($rawServerVersion, 0, $mariaDbPos), '-');
-			$dashPos = mb_strrpos($rawServerVersion, '-');
+			$this->version = trim(mb_substr($this->version, 0, $mariaDbPos), '-');
+			$dashPos = mb_strrpos($this->version, '-');
 			if ($dashPos !== FALSE) 
-				$rawServerVersion = mb_substr($rawServerVersion, $dashPos + 1);
+				$this->version = mb_substr($this->version, $dashPos + 1);
 		} else {
 			$this->mariadb = FALSE;
-			$dashPos = mb_strrpos($rawServerVersion, '-');
+			$dashPos = mb_strrpos($this->version, '-');
 			if ($dashPos !== FALSE) 
-				$rawServerVersion = mb_substr($rawServerVersion, $dashPos + 1);
+				$this->version = mb_substr($this->version, $dashPos + 1);
 		}
-		
-		$this->version = $rawServerVersion;
-		
+
 		$this->transReadWriteSupport = (
 			$this->mariadb || (
 				!$this->mariadb &&
 				version_compare($this->version, '5.6.0', '>')
 			)
 		);
+
+		$multiStatementsConst = '\PDO::MYSQL_ATTR_MULTI_STATEMENTS';
+		$multiStatementsConstVal = defined($multiStatementsConst) 
+			? constant($multiStatementsConst) 
+			: 0;
+		$this->multiStatements = isset($this->options[$multiStatementsConstVal]);
 	}
 }
