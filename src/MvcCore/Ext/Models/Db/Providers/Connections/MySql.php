@@ -104,13 +104,14 @@ implements	\MvcCore\Ext\Models\Db\Model\IConstants,
 		
 		if ($consistentSnapshot) 
 			$snapshotStr = ' WITH CONSISTENT SNAPSHOT';
+		
+		if ($this->autocommit) {
+			$this->autocommit = FALSE;
+			$sqlItems[] = 'SET SESSION autocommit = 0;';
+		}
 
 		if ($this->transReadWriteSupport) {
 			if ($readWrite === TRUE) {
-				if ($this->autocommit) {
-					$this->autocommit = FALSE;
-					$sqlItems[] = 'SET SESSION autocommit = 0;';
-				}
 				$writeStr = ' READ WRITE';
 				if ($consistentSnapshot)
 					$startTransPropsSeparator = ',';

@@ -16,17 +16,19 @@ namespace MvcCore\Ext\Models\Db\Models\MySqls;
 interface IConstants {
 
 	/** @var int */
-	const TRANS_CONSISTENT_SHAPSHOT	= 16;
+	const TRANS_READ_WRITE			= 16;
+	
+	/** @var int */
+	const TRANS_READ_ONLY			= 32;
+
+	
+	/** @var int */
+	const TRANS_CHAIN				= 64;
+	
+	/** @var int */
+	const TRANS_NO_CHAIN			= 128;
+
 
 	/** @var int */
-	const TRANS_READ_WRITE			= 32;
-	
-	/** @var int */
-	const TRANS_READ_ONLY			= 64;
-	
-	/** @var int */
-	const TRANS_CHAIN				= 128;
-	
-	/** @var int */
-	const TRANS_NO_CHAIN			= 256;
+	const TRANS_CONSISTENT_SHAPSHOT	= 256;
 }
