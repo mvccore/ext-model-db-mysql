@@ -13,6 +13,9 @@
 
 namespace MvcCore\Ext\Models\Db\Models\MySqls;
 
+/**
+ * @mixin \MvcCore\Ext\Models\Db\Models\MySqls\Features
+ */
 trait ProviderResource {
 	
 	/**
