@@ -17,15 +17,10 @@ class		MySql
 implements	\MvcCore\IModel,
 			\MvcCore\Ext\Models\Db\IModel,
 			\MvcCore\Ext\Models\Db\Model\IConstants,
-			\MvcCore\Ext\Models\Db\Models\MySqls\IConstants {
+			\MvcCore\Ext\Models\Db\Models\MySql\IConstants,
+			\JsonSerializable {
 	
-	use \MvcCore\Model\Props;
-	use \MvcCore\Model\Config;
-	use \MvcCore\Model\Resource;
-	use \MvcCore\Model\Converters;
-	use \MvcCore\Model\Comparers;
-
-	use \MvcCore\Ext\Models\Db\Models\MySqls\Features;
+	use \MvcCore\Ext\Models\Db\Models\MySql\Features;
 
 	/**
 	 * MvcCore Extension - Model - Db - version:

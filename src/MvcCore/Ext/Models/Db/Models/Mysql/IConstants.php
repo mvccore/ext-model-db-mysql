@@ -11,7 +11,7 @@
  * @license		https://mvccore.github.io/docs/mvccore/5.0.0/LICENSE.md
  */
 
-namespace MvcCore\Ext\Models\Db\Models\MySqls;
+namespace MvcCore\Ext\Models\Db\Models\MySql;
 
 interface IConstants {
 
