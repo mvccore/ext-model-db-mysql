@@ -280,6 +280,7 @@ implements	\MvcCore\Ext\Models\Db\Model\IConstants,
 	 */
 	protected function setUpConnectionSpecifics () {
 		parent::setUpConnectionSpecifics();
+
 		$mariaDbPos = mb_strpos($this->version, 'mariadb');
 		if ($mariaDbPos !== FALSE) {
 			$this->mariadb = TRUE;
@@ -306,5 +307,8 @@ implements	\MvcCore\Ext\Models\Db\Model\IConstants,
 			? constant($multiStatementsConst) 
 			: 0;
 		$this->multiStatements = isset($this->options[$multiStatementsConstVal]);
+
+		if ($this->usingOdbcDriver) 
+			$this->metaDataStatement = "SELECT ROW_COUNT() AS `AffectedRows`, LAST_INSERT_ID() AS `LastInsertId;";
 	}
 }
