@@ -139,21 +139,36 @@ implements	\MvcCore\Ext\Models\Db\Model\IConstants,
 			$sqlItems[] = 'SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;';
 		}
 
-		if ($name !== NULL) {
+		if ($name === NULL) {
+			$this->transactionName = 'mysql_tran_' . str_replace('.', '', uniqid('', TRUE));
+		} else {
 			$toolClass = \MvcCore\Application::GetInstance()->GetToolClass();
 			$this->transactionName = $toolClass::GetUnderscoredFromPascalCase($name);
-			$sqlItems[] = "/* trans_start:{$this->transactionName} */";
 		}
+		$sqlItems[] = "/* trans_start:{$this->transactionName} */";
+
 		// examples:"START TRANSACTION WITH CONSISTENT SNAPSHOT, READ WRITE;" or
 		//			"START TRANSACTION READ WRITE;" or
 		//			"START TRANSACTION READ ONLY;" or ...
 		$sqlItems[] = "START TRANSACTION{$transStartProperties};";
 		
+		$debugging = $this->debugger !== NULL;
 		if ($this->multiStatements) {
+			if ($debugging) $reqTime = microtime(TRUE);
 			$this->provider->exec(implode(" \n", $sqlItems));
+			if ($debugging) 
+				$this->debugger->AddQuery(
+					implode("\n", $sqlItems), [], $reqTime, microtime(TRUE), $this
+				);
 		} else {
-			foreach ($sqlItems as $sqlItem)
+			foreach ($sqlItems as $sqlItem) {
+				if ($debugging) $reqTime = microtime(TRUE);
 				$this->provider->exec($sqlItem);
+				if ($debugging) 
+					$this->debugger->AddQuery(
+						$sqlItem, [], $reqTime, microtime(TRUE), $this
+					);
+			}
 		}
 
 		$this->inTransaction = TRUE;
@@ -181,21 +196,31 @@ implements	\MvcCore\Ext\Models\Db\Model\IConstants,
 			$chainSql = ' AND NO CHAIN';
 		}
 
-		if ($this->transactionName !== NULL) 
-			$sqlItems[] = "/* trans_commit:{$this->transactionName} */";
-
+		$sqlItems[] = "/* trans_commit:{$this->transactionName} */";
 		$sqlItems[] = "COMMIT{$chainSql};";
 
 		if (!$chain && !$this->autocommit) {
 			$this->autocommit = TRUE;
 			$sqlItems[] = 'SET SESSION autocommit = 1;';
 		}
-
+		
+		$debugging = $this->debugger !== NULL;
 		if ($this->multiStatements) {
+			if ($debugging) $reqTime = microtime(TRUE);
 			$this->provider->exec(implode(" \n", $sqlItems));
+			if ($debugging) 
+				$this->debugger->AddQuery(
+					implode("\n", $sqlItems), [], $reqTime, microtime(TRUE), $this
+				);
 		} else {
-			foreach ($sqlItems as $sqlItem)
+			foreach ($sqlItems as $sqlItem) {
+				if ($debugging) $reqTime = microtime(TRUE);
 				$this->provider->exec($sqlItem);
+				if ($debugging) 
+					$this->debugger->AddQuery(
+						$sqlItem, [], $reqTime, microtime(TRUE), $this
+					);
+			}
 		}
 		
 		if ($chain) {
@@ -228,21 +253,31 @@ implements	\MvcCore\Ext\Models\Db\Model\IConstants,
 			$chainSql = ' AND NO CHAIN';
 		}
 
-		if ($this->transactionName !== NULL) 
-			$sqlItems[] = "/* trans_rollback:{$this->transactionName} */";
-
+		$sqlItems[] = "/* trans_rollback:{$this->transactionName} */";
 		$sqlItems[] = "ROLLBACK{$chainSql};";
 
 		if (!$chain && !$this->autocommit) {
 			$this->autocommit = TRUE;
 			$sqlItems[] = 'SET SESSION autocommit = 1;';
 		}
-
+		
+		$debugging = $this->debugger !== NULL;
 		if ($this->multiStatements) {
+			if ($debugging) $reqTime = microtime(TRUE);
 			$this->provider->exec(implode(" \n", $sqlItems));
+			if ($debugging) 
+				$this->debugger->AddQuery(
+					implode("\n", $sqlItems), [], $reqTime, microtime(TRUE), $this
+				);
 		} else {
-			foreach ($sqlItems as $sqlItem)
+			foreach ($sqlItems as $sqlItem) {
+				if ($debugging) $reqTime = microtime(TRUE);
 				$this->provider->exec($sqlItem);
+				if ($debugging) 
+					$this->debugger->AddQuery(
+						$sqlItem, [], $reqTime, microtime(TRUE), $this
+					);
+			}
 		}
 
 		if ($chain) {
