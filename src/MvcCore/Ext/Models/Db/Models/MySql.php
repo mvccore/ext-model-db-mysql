@@ -13,6 +13,7 @@
 
 namespace MvcCore\Ext\Models\Db\Models;
 
+#[\AllowDynamicProperties]
 class		MySql
 implements	\MvcCore\IModel,
 			\MvcCore\Ext\Models\Db\IModel,
