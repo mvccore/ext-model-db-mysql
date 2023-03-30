@@ -17,6 +17,11 @@ class		MySql
 extends		\MvcCore\Ext\Models\Db\Connection
 implements	\MvcCore\Ext\Models\Db\Model\IConstants,
 			\MvcCore\Ext\Models\Db\Models\MySql\IConstants {
+	
+	/**
+	 * SQL metadata statement with fields `AffectedRows` and `LastInsertId`.
+	 */
+	const METADATA_STATEMENT = "SELECT ROW_COUNT() AS `AffectedRows`, LAST_INSERT_ID() AS `LastInsertId`;";
 
 	/**
 	 * MySQL autocommit for current session.
@@ -344,6 +349,6 @@ implements	\MvcCore\Ext\Models\Db\Model\IConstants,
 		$this->multiStatements = isset($this->options[$multiStatementsConstVal]);
 
 		if ($this->usingOdbcDriver) 
-			$this->metaDataStatement = "SELECT ROW_COUNT() AS `AffectedRows`, LAST_INSERT_ID() AS `LastInsertId;";
+			$this->metaDataStatement = static::METADATA_STATEMENT;
 	}
 }
