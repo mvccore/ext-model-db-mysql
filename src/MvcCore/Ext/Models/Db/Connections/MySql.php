@@ -159,20 +159,23 @@ implements	\MvcCore\Ext\Models\Db\Model\IConstants,
 		
 		$debugging = $this->debugger !== NULL;
 		if ($this->multiStatements) {
-			if ($debugging) $reqTime = microtime(TRUE);
-			$this->provider->exec(implode(" \n", $sqlItems));
+			$queries = implode("\n", $sqlItems);
 			if ($debugging) 
-				$this->debugger->AddQuery(
-					implode("\n", $sqlItems), [], $reqTime, microtime(TRUE), $this
-				);
+				$this->debugger
+					->AddQuery($this, $queries, [])
+					->AddLastQueryRequestTime(microtime(TRUE));
+			$this->provider->exec($queries);
+			if ($debugging)
+				$this->debugger->AddLastQueryResponseTime(microtime(TRUE));
 		} else {
 			foreach ($sqlItems as $sqlItem) {
-				if ($debugging) $reqTime = microtime(TRUE);
+				if ($debugging) 
+					$this->debugger
+						->AddQuery($this, $sqlItem, [])
+						->AddLastQueryRequestTime(microtime(TRUE));
 				$this->provider->exec($sqlItem);
 				if ($debugging) 
-					$this->debugger->AddQuery(
-						$sqlItem, [], $reqTime, microtime(TRUE), $this
-					);
+					$this->debugger->AddLastQueryResponseTime(microtime(TRUE));
 			}
 		}
 
@@ -211,20 +214,23 @@ implements	\MvcCore\Ext\Models\Db\Model\IConstants,
 		
 		$debugging = $this->debugger !== NULL;
 		if ($this->multiStatements) {
-			if ($debugging) $reqTime = microtime(TRUE);
-			$this->provider->exec(implode(" \n", $sqlItems));
+			$queries = implode("\n", $sqlItems);
 			if ($debugging) 
-				$this->debugger->AddQuery(
-					implode("\n", $sqlItems), [], $reqTime, microtime(TRUE), $this
-				);
+				$this->debugger
+					->AddQuery($this, $queries, [])
+					->AddLastQueryRequestTime(microtime(TRUE));
+			$this->provider->exec($queries);
+			if ($debugging)
+				$this->debugger->AddLastQueryResponseTime(microtime(TRUE));
 		} else {
 			foreach ($sqlItems as $sqlItem) {
-				if ($debugging) $reqTime = microtime(TRUE);
+				if ($debugging) 
+					$this->debugger
+						->AddQuery($this, $sqlItem, [])
+						->AddLastQueryRequestTime(microtime(TRUE));
 				$this->provider->exec($sqlItem);
 				if ($debugging) 
-					$this->debugger->AddQuery(
-						$sqlItem, [], $reqTime, microtime(TRUE), $this
-					);
+					$this->debugger->AddLastQueryResponseTime(microtime(TRUE));
 			}
 		}
 		
@@ -265,26 +271,28 @@ implements	\MvcCore\Ext\Models\Db\Model\IConstants,
 			$this->autocommit = TRUE;
 			$sqlItems[] = 'SET SESSION autocommit = 1;';
 		}
-		
-		$debugging = $this->debugger !== NULL;
+
 		if ($this->multiStatements) {
-			if ($debugging) $reqTime = microtime(TRUE);
-			$this->provider->exec(implode(" \n", $sqlItems));
+			$queries = implode("\n", $sqlItems);
 			if ($debugging) 
-				$this->debugger->AddQuery(
-					implode("\n", $sqlItems), [], $reqTime, microtime(TRUE), $this
-				);
+				$this->debugger
+					->AddQuery($this, $queries, [])
+					->AddLastQueryRequestTime(microtime(TRUE));
+			$this->provider->exec($queries);
+			if ($debugging)
+				$this->debugger->AddLastQueryResponseTime(microtime(TRUE));
 		} else {
 			foreach ($sqlItems as $sqlItem) {
-				if ($debugging) $reqTime = microtime(TRUE);
+				if ($debugging) 
+					$this->debugger
+						->AddQuery($this, $sqlItem, [])
+						->AddLastQueryRequestTime(microtime(TRUE));
 				$this->provider->exec($sqlItem);
 				if ($debugging) 
-					$this->debugger->AddQuery(
-						$sqlItem, [], $reqTime, microtime(TRUE), $this
-					);
+					$this->debugger->AddLastQueryResponseTime(microtime(TRUE));
 			}
 		}
-
+		
 		if ($chain) {
 			$this->inTransaction  = TRUE;
 		} else {
