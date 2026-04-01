@@ -349,8 +349,10 @@ implements	\MvcCore\Ext\Models\Db\Model\IConstants,
 				version_compare($this->version, '5.6.0', '>')
 			)
 		);
-
-		$multiStatementsConst = '\PDO::MYSQL_ATTR_MULTI_STATEMENTS';
+		
+		$multiStatementsConst = PHP_VERSION_ID > 80500
+			? '\Pdo\Mysql::ATTR_MULTI_STATEMENTS'
+			: '\PDO::MYSQL_ATTR_MULTI_STATEMENTS';
 		$multiStatementsConstVal = defined($multiStatementsConst) 
 			? constant($multiStatementsConst) 
 			: 0;
